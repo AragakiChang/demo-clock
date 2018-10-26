@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+
+        .tag-time {
+            display: block;
+            position: absolute;
+            width: 30px;
+            height: 30px; 
+            border-radius: 15px;
+            text-align: center;
+            line-height: 30px;
+        }
+
+        #clock {
+            height: 400px;
+            width: 400px;
+            border-radius: 200px;
+            margin: 100px auto;
+            position: relative;
+        }
+
+        #clock::after {
+            content: '';
+            display: block;
+            position: absolute;
+            width: 430px;
+            height: 430px;
+            background: skyblue;
+            z-index: -1;
+            left: -15px;
+            top: -15px;
+            border-radius: 215px;
+        }
+
+        #tag {
+            height: 400px;
+            width: 400px;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        #arrow {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 4px;
+            background: gray;
+            left: 196px;
+            top: 196px;
+            /* transform: translate(-0.5, -0.5); */
+        }
+
+        #hour, #minute, #second {
+            position: absolute;
+            left: 200px;
+            top: 199px;
+            transform-origin: 0% 0%;
+        }
+
+        #hour {
+            background: red;
+            height: 2px;
+            width: 60px;
+        }
+
+        #minute {
+            background: green;
+            height: 2px;
+            width: 100px;
+        }
+
+        #second {
+            background: yellow;
+            height: 2px;
+            width: 80px;
+        }
+    </style>
+</head>
+<body>
+    <div id="clock">
+        <div id="minute"></div>
+        <div id="hour"></div>
+        <div id="second"></div>      
+        <div id="tag">
+            <span class="tag-time">12</span>
+            <span class="tag-time">1</span>
+            <span class="tag-time">2</span>
+            <span class="tag-time">3</span>
+            <span class="tag-time">4</span>
+            <span class="tag-time">5</span>
+            <span class="tag-time">6</span>
+            <span class="tag-time">7</span>
+            <span class="tag-time">8</span>
+            <span class="tag-time">9</span>
+            <span class="tag-time">10</span>
+            <span class="tag-time">11</span>
+        </div>
+        <div id="arrow"></div>
+    </div>
+</body>
+<script>
+    let tag = document.querySelectorAll('.tag-time')
+    let long = Math.sqrt(3)*100
+    let short = 100
+    let r = 200
+
+    function p(index, r, short, long) {
+        switch (index) {
+            case 0:
+                return [r,0]
+            case 1: 
+                return [r+short, r-long]
+            case 2:
+                return [r+long, r-short]
+            case 3:
+                return [r*2, r]
+            case 4:
+                return [r+long, r+short]
+            case 5:
+                return [r+short, r+long]
+            case 6: 
+                return [r, r*2]
+            case 7: 
+                return [r-short, r+long]
+            case 8: 
+                return [r-long, r+short]
+            case 9: 
+                return [0, r]
+            case 10:
+                return [r-long, r-short]
+            case 11: 
+                return [r-short, r-long]
+            default: 
+                return
+        }
+    }
+    
+    function init(objh,objm,objs) {
+        let d = new Date()
+        let day = d.getMonth()
+        let hour = d.getHours()
+        let minute = d.getMinutes()
+        let sec = d.getSeconds()
+        let hd = (hour % 12)*30
+        let md = (minute / 60)*360
+        let sd = (sec / 60)*360
+        // console.log(hour)
+        // console.log(md)
+        // console.log(hd)
+        objh.style.transform = `rotate(${-90 + hd}deg)`
+        objm.style.transform = `rotate(${-90 + md}deg)`
+        objs.style.transform = `rotate(${-90 + sd}deg)`
+    }
+
+
+    for (let i = 0; i < tag.length; i++) {
+        let arr = p(i, r, short, long)
+        let x = arr[0] - 15
+        let y = arr[1] - 15
+        tag[i].style.left =  `${x}px`
+        tag[i].style.top = `${y}px`
+    }
+
+    let hd = document.querySelector('#hour')
+    let md = document.querySelector('#minute')
+    let sd = document.querySelector('#second')
+
+    init(hd,md,sd)
+    let interval = setInterval(()=>{
+        init(hd,md,sd)
+    },1000)
+
+    // let dingshi = setInterval(()=>{
+    //     init(hd,md)
+    // },1000)
+</script>
+</html>
